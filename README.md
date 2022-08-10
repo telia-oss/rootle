@@ -1,5 +1,5 @@
 # Rootle
-
+This project is still WIP and, not ready for production use.
 Cross language structured log library.
 
 ## Languages
