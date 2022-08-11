@@ -1,9 +1,9 @@
 package rootle
 
 type Config struct {
-	ID       *string
-	Service  *string
-	Platform *string
+	ID          *string
+	Application *string
+	Platform    *string
 }
 
 func NewConfig() *Config {
@@ -15,7 +15,7 @@ func (c *Config) WithID(id string) *Config {
 	return c
 }
 
-func (c *Config) WithService(service string) *Config {
-	c.Service = &service
+func (c *Config) WithApplication(application string) *Config {
+	c.Application = &application
 	return c
 }

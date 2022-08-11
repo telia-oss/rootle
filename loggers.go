@@ -6,31 +6,27 @@ import (
 	"time"
 )
 
-type logger interface {
-	Info(string)
-}
-
 type Log struct {
-	ID         string `json:"id"`
-	Timestamp  int64  `json:"timestamp"`
-	Message    string `json:"message"`
-	Level      string `json:"level"`
-	Service    string `json:"service"`
-	Status     int    `json:",omitempty"`
-	StackTrace string `json:",omitempty"`
+	ID          string `json:"id"`
+	Timestamp   int64  `json:"timestamp"`
+	Message     string `json:"message"`
+	Level       string `json:"level"`
+	Application string `json:"application"`
+	Status      int    `json:",omitempty"`
+	StackTrace  string `json:",omitempty"`
 }
 
-func (c *Rootle) Info(message string) {
+func (c *Config) Info(message string) {
 	platform := ""
-	if c.config.Platform != nil {
-		platform = *c.config.Platform
+	if c.Platform != nil {
+		platform = *c.Platform
 	}
 	rootleLog := Log{
-		ID:        *c.config.ID,
-		Timestamp: time.Now().Unix(),
-		Message:   message,
-		Level:     "INFO",
-		Service:   *c.config.Service,
+		ID:          *c.ID,
+		Timestamp:   time.Now().Unix(),
+		Message:     message,
+		Level:       "INFO",
+		Application: *c.Application,
 	}
 	jsonLog, _ := json.Marshal(rootleLog)
 	if platform == "js" {
