@@ -3,7 +3,6 @@ package rootle
 type Config struct {
 	ID          *string
 	Application *string
-	Platform    *string
 }
 
 func NewConfig() *Config {
