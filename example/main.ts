@@ -1,4 +1,5 @@
-import { rootle }  from '../js/rootle';
+import Rootle  from '../typescript/rootle';
 
-var log = rootle.New("123", "invouce-lambda");
-log.Info("Hello World");
+const log = new Rootle("123", "billing-Lambda");
+
+log.info("Hello world! .....");
