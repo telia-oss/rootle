@@ -3,6 +3,28 @@ This project is still WIP and, not ready for production use.
 
 Cross language structured log library.
 
+## Methods
+
+| Name          | Parameters |
+| ------------- | ------------- |
+| Info          |(message)  |
+| Warm          | (message)  |
+| Error         | (message, downstream, stacktrace, code)  |
+
+## Log message structure
+
+| Field | type |
+| ------------- | ------------- |
+| id  | string  |
+| application  | string  |
+| timestamp  | Timestamp  |
+| message  | string  |
+| level  | string  |
+| downstream  | Downstream  |
+| stacktrace  | string  |
+| code "exit code"  | init  |
+
+
 ## Languages
 
 - Go
@@ -36,7 +58,14 @@ rootle.info("Hello World")
 rootle.warn("Hello World")
 rootle.error("Hello World", rootle.Downstream(500, "localhost"), "billing/user", 0)
 ```
+## Output example
+```
+- Info: {"id":"123","application":"invoice-lambda","timestamp":1660307642,"message":"Hello World","level":"INFO","Downstream":{"code":0,"host":""}}
 
+- Warn: {"id":"123","application":"invoice-lambda","timestamp":1660307642,"message":"Hello World","level":"WARN","Downstream":{"code":0,"host":""}}
+
+- Error: {"id":"123","application":"invoice-lambda","timestamp":1660307642,"message":"Hello World","level":"ERROR","Downstream":{"code":500,"host":"localhost"},"StackTrace":"billing/user"}
+```
 ## Motivation
 
 - Automate logs of cross-language projects ie. FaaS.
