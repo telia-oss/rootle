@@ -27,26 +27,17 @@ func New(conf Config) *Config {
 }
 
 func logMessage(c Config, message string, level string, downstream *Downstream, stackTrace *string, code *int, callback func(logJSON string)) {
-	var rootleLog Log
+	rootleLog := Log{
+		ID:          *c.ID,
+		Application: *c.Application,
+		Timestamp:   time.Now().Unix(),
+		Message:     message,
+		Level:       level,
+	}
 	if level == "ERROR" {
-		rootleLog = Log{
-			ID:          *c.ID,
-			Application: *c.Application,
-			Timestamp:   time.Now().Unix(),
-			Message:     message,
-			Level:       level,
-			Downstream:  *downstream,
-			StackTrace:  *stackTrace,
-			Code:        *code,
-		}
-	} else {
-		rootleLog = Log{
-			ID:          *c.ID,
-			Application: *c.Application,
-			Timestamp:   time.Now().Unix(),
-			Message:     message,
-			Level:       level,
-		}
+		rootleLog.Downstream = *downstream
+		rootleLog.StackTrace = *stackTrace
+		rootleLog.Code = *code
 	}
 	jsonLog, _ := json.Marshal(rootleLog)
 	callback(string(jsonLog))
