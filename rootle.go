@@ -40,7 +40,6 @@ func logMessage(c Config, message string, level string, downstream *Downstream, 
 			Code:        *code,
 		}
 	} else {
-
 		rootleLog = Log{
 			ID:          *c.ID,
 			Application: *c.Application,
@@ -65,7 +64,7 @@ func (c *Config) Warn(message string) {
 	})
 }
 
-func (c *Config) Error(message string, stackTrace string, downstream Downstream, code int) {
+func (c *Config) Error(message string, downstream Downstream, stackTrace string, code int) {
 	logMessage(*c, message, "ERROR", &downstream, &stackTrace, &code, func(logJSON string) {
 		log.Println(logJSON)
 	})

@@ -11,8 +11,8 @@ func main() {
 	rootle.Info("Hello World")
 	rootle.Warn("Hello World")
 
-	rootle.Error("Hello World", "billing/user", rt.Downstream{
+	rootle.Error("Hello World", rt.Downstream{
 		Code: 500,
 		Host: "localhost",
-	}, 0)
+	}, "billing/user", 0)
 }
