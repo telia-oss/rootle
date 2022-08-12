@@ -8,7 +8,7 @@ Cross language structured log library.
 | Name          | Parameters |
 | ------------- | ------------- |
 | Info          |(message)  |
-| Warm          | (message)  |
+| Warn         | (message)  |
 | Error         | (message, downstream, stacktrace, code)  |
 
 ## Log message structure
