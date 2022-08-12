@@ -2,27 +2,32 @@ package rootle
 
 import com.google.gson.Gson
 
-class Rootle {
-    fun info(message: String) {
-        val log = Log("123", System.currentTimeMillis().toString(), message,
-                "INFO", "Invoice-Lambda", 0, "")
+class Rootle(private val id: String, private val application: String)  {
+
+    inner class Downstream(val code: Int, val host: String) {}
+
+    private inner class Log(private val id: String, private val application: String, private val timestamp: String,
+              private val message: String, private val level: String,
+              private val downstream: Downstream? = null, private val stacktrace: String? = null, val code: Int? = null) {
+    }
+     fun info(message: String) {
+        val log = Log(this.id, this.application, System.currentTimeMillis().toString(), message,
+                "INFO")
         val logJsonString = Gson().toJson(log)
         println(logJsonString)
     }
-}
 
-
-class Log(val id: String, val timestamp: String, 
-val message: String, val level: String,
-val application: String, val status: Int, val stacktrace: String) {
-    override fun toString(): String {
-        return "Log(id='$id', timestamp='$timestamp', message='$message', level='$level', application='$application', status=$status, stacktrace='$stacktrace')"
+    fun warn(message: String) {
+        val log = Log(this.id, this.application, System.currentTimeMillis().toString(), message,
+                "WARN")
+        val logJsonString = Gson().toJson(log)
+        println(logJsonString)
     }
-}
 
-fun main() {
-
-    val rootle = Rootle()
-    
-    rootle.info("Hello World")
+    fun error(message: String, downstream: Downstream, stackTrace: String, code: Int) {
+        val log = Log(this.id, this.application, System.currentTimeMillis().toString(), message,
+                "ERROR", downstream, stackTrace, code)
+        val logJsonString = Gson().toJson(log)
+        println(logJsonString)
+    }
 }
