@@ -22,7 +22,7 @@ Cross language structured log library.
 | level  | string  |
 | downstream  | Downstream  |
 | stacktrace  | string  |
-| code "exit code"  | init  |
+| code "exit code"  | int  |
 
 
 ## Languages
@@ -66,8 +66,3 @@ rootle.error("Hello World", rootle.Downstream(500, "localhost"), "billing/user",
 
 - Error: {"id":"123","application":"invoice-lambda","timestamp":1660307642,"message":"Hello World","level":"ERROR","Downstream":{"code":500,"host":"localhost"},"StackTrace":"billing/user"}
 ```
-## Motivation
-
-- Automate logs of cross-language projects ie. FaaS.
-- Automate logs from multiple projects written in different languages.
-
