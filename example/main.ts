@@ -1,4 +1,4 @@
-import Rootle  from '../typescript/rootle';
+import Rootle  from '../typescript/dist/rootle';
 
 const log = new Rootle("123", "billing-Lambda");
 
