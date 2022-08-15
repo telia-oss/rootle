@@ -1,8 +1,12 @@
 {
   "name": "rootle",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "TS implementation of Rootle structured log",
-  "main": "main.ts",
+  "main": "dist/rootle.js",
+  "types": "./dist/rootle.d.ts",
+  "files": [
+    "dist/**"
+  ],
   "scripts": {
     "build": "tsc --project tsconfig.json"
   },
