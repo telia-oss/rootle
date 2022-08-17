@@ -29,40 +29,73 @@ Cross language structured log library.
 
 - Go
 ```
-rootle := rt.New(*rt.NewConfig().WithID("123").WithApplication("invoice-lambda"))
 
-rootle.Info("Hello World")
-rootle.Warn("Hello World")
+import (
+	rootle "github.com/telia-oss/rootle"
+)
 
-rootle.Error("Hello World", rt.Downstream{
-  Code: 500,
-  Host: "localhost",
+logger := rootle.New(*rootle.NewConfig().WithID("123").WithApplication("invoice-lambda"))
+
+logger.Info("Hello World")
+logger.Warn("Hello World")
+
+logger.Error("Hello World", rootle.Downstream{
+  Http: &rootle.Http{
+    Method:     "GET",
+    StatusCode: rootle.INTERNAL_SERVER_ERROR,
+    Url:        "http://localhost:8080/invoice/123",
+    Useragent:  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+    Referer:    "http://localhost:8080/",
+  },
+  Grpc: &rootle.Grpc{
+    Procedure: "GetInvoice",
+    Code:      rootle.INTERNAL,
+    Service:   "invoice",
+    Useragent: "	/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+    Referer:   "http://localhost:8080/",
+  },
 }, "billing/user", 0)
 ```
 - TypeScript
 ```
-const log = new Rootle("123", "billing-Lambda");
+import Rootle, {HttpStatusCode, GrpcCodes}  from 'rootle';
 
-log.info("Info, hello world!");
-log.warn("Warn, hello world!")
-log.error("Error, hello world!", {
-    code: 500,
-    host: "localhost"
+const logger = new Rootle("123", "billing-Lambda");
+
+logger.info("Info, hello world!");
+logger.warn("Warn, hello world!")
+logger.error("Error, hello world!", {
+    http: {
+        method: "GET",
+        statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+        url: "http://localhost:8080/invoice/123",
+        useragent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+        referer: "http://localhost:8080/"
+    },
+    grpc: {
+        procedure: "GetInvoice",
+        code:      GrpcCodes.INTERNAL,
+        service:   "invoice",
+        useragent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+        referer:   "http://localhost:8080/",
+    }
 }, "billing/user", 0);
 ```
 - Kotlin
 ```
-val rootle = Rootle("123", "Billing-lambda")
+val logger = Rootle("123", "Billing-lambda")
 
-rootle.info("Hello World")
-rootle.warn("Hello World")
-rootle.error("Hello World", rootle.Downstream(500, "localhost"), "billing/user", 0)
+logger.info("Hello World")
+logger.warn("Hello World")
+logger.error("Hello World", rootle.Downstream(rootle.Http("GET", StatusCode.InternalServerError.code, "http://localhost:8080/invoice/123", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36", "http://localhost:8080/"),
+        rootle.Grpc("GetInvoice", GrpcCodes.internalError.code, "invoice", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",  "http://localhost:8080/")), "billing/user", 0)
 ```
 ## Output example
 ```
-- Info: {"id":"123","application":"invoice-lambda","timestamp":1660307642,"message":"Hello World","level":"INFO","Downstream":{"code":0,"host":""}}
+- Info: {"id":"123","application":"invoice-lambda","timestamp":1660741987,"message":"Hello World","level":"INFO"}
 
-- Warn: {"id":"123","application":"invoice-lambda","timestamp":1660307642,"message":"Hello World","level":"WARN","Downstream":{"code":0,"host":""}}
+- Warn: {"id":"123","application":"invoice-lambda","timestamp":1660741987,"message":"Hello World","level":"WARN"}
 
-- Error: {"id":"123","application":"invoice-lambda","timestamp":1660307642,"message":"Hello World","level":"ERROR","Downstream":{"code":500,"host":"localhost"},"StackTrace":"billing/user"}
+- Error: {"id":"123","application":"invoice-lambda","timestamp":1660741987,"message":"Hello World","level":"ERROR","Downstream":{"grpc":{"procedure":"GetInvoice","code":13,"service":"invoice","useragent":"\t/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36","referer":"http://localhost:8080/"},"http":{"method":"GET","status_code":500,"url":"http://localhost:8080/invoice/123","useragent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36","referer":"http://localhost:8080/"}},"StackTrace":"billing/user"}
+
 ```
