@@ -132,8 +132,19 @@ val logger = Rootle("ac12Cd-Aevd-12Grx-235f4", "Billing-lambda")
 
 logger.info("Hello World")
 logger.warn("Hello World")
-logger.error("Hello World", rootle.Downstream(rootle.Http("GET", StatusCode.InternalServerError.code, "http://localhost:8080/invoice/123", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36", "http://localhost:8080/"),
-        rootle.Grpc("GetInvoice", GrpcCodes.internalError.code, "invoice", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",  "http://localhost:8080/")), "billing/user", 0)
+
+
+val logger = Rootle("ac12Cd-Aevd-12Grx-235f4", "billing")
+
+val jsonObject = JsonObject()
+jsonObject.addProperty("foo", "bar")
+
+logger.error("Error message", jsonObject.toString(), rootle.Downstream(rootle.Http("GET", StatusCode.InternalServerError.code, "http://localhost:8080/invoice/123",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+        "http://localhost:8080/",  jsonObject.toString()),
+        rootle.Grpc("GetInvoice", GrpcCodes.internalError.code, "invoice",
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+                "http://localhost:8080/", jsonObject.toString())), "billing/user", 0);
 ```
 ## Output example
 ```

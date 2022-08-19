@@ -92,13 +92,14 @@ enum class StatusCode(val code: Int) {
 
 class Rootle(private val id: String, private val application: String)  {
 
-    inner class Http (val method: String, val statusCode: Int, val url: String, val useragent: String, val referer: String) {}
-    inner class Grpc (val procedure: String, val code: Int, val service: String, val useragent: String, val referer: String) {}
+    inner class Http (val method: String? = null, val statusCode: Int? = null, val url: String? = null, val useragent: String? = null, val referer: String? = null, val payload: String? = null) {}
+    inner class Grpc (val procedure: String? = null, val code: Int? = null, val service: String? = null, val useragent: String? = null, val referer: String? = null, val payload: String? = null) {}
     inner class Downstream(val http: Http? = null, val grpc: Grpc? = null) {}
 
     private inner class Log(private val id: String, private val application: String, private val timestamp: String,
               private val message: String, private val level: String,
-              private val downstream: Downstream? = null, private val stacktrace: String? = null, val code: Int? = null) {
+                            private val event: String? = null, private val downstream: Downstream? = null,
+                            private val stacktrace: String? = null, val code: Int? = null) {
     }
      fun info(message: String) {
         val log = Log(this.id, this.application, System.currentTimeMillis().toString(), message,
@@ -114,10 +115,11 @@ class Rootle(private val id: String, private val application: String)  {
         println(logJsonString)
     }
 
-    fun error(message: String, downstream: Downstream, stackTrace: String, code: Int) {
+    fun error(message: String, event: String? = null, downstream: Downstream? = null, stackTrace: String? = null, code: Int? = null) {
         val log = Log(this.id, this.application, System.currentTimeMillis().toString(), message,
-                "ERROR", downstream, stackTrace, code)
+                "ERROR", event, downstream, stackTrace, code)
         val logJsonString = Gson().toJson(log)
         println(logJsonString)
     }
 }
+
