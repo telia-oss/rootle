@@ -76,7 +76,7 @@ data := map[string]interface{}{
 
 json, _ := json.Marshal(data)
 
-// can be chained in the New function.
+// Can be chained in the New function.
 logger.WithEvent(string(json))
 
 logger.Error("Hello World", &rootle.Downstream{
@@ -110,10 +110,14 @@ logger.warn("Warn, hello world!");
 var json = {
     "foo": "bar"
 };
-logger.error("Error, hello world!", JSON.stringify(json), {
+
+// Can be set in Rootle initlization `new Rootle(id, application, event)`
+logger.setEvent(JSON.stringify(json))
+
+logger.error("Error, hello world!", {
     http: {
         method: "GET",
-        statusCode: rootle_1.HttpStatusCode.INTERNAL_SERVER_ERROR,
+        statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
         url: "http://localhost:8080/invoice/123",
         useragent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
         referer: "http://localhost:8080/",
@@ -121,10 +125,10 @@ logger.error("Error, hello world!", JSON.stringify(json), {
     },
     grpc: {
         procedure: "GetInvoice",
-        code: rootle_1.GrpcCodes.INTERNAL,
-        service: "invoice",
+        code:      GrpcCodes.INTERNAL,
+        service:   "invoice",
         useragent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
-        referer: "http://localhost:8080/",
+        referer:   "http://localhost:8080/",
         payload: JSON.stringify(json)
     }
 }, "billing/user", 0);
@@ -138,6 +142,7 @@ logger.warn("Hello World")
 
   val jsonObject = JsonObject()
   jsonObject.addProperty("foo", "bar")
+
   // Can be set in Rootle initlization `Rootle(id, application, event)`
   logger.setEvent(jsonObject.toString())
 
