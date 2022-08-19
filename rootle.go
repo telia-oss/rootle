@@ -17,6 +17,7 @@ type Http struct {
 	Url        string         `json:"url"`
 	Useragent  string         `json:"useragent"`
 	Referer    string         `json:"referer"`
+	Payload    string         `json:"payload,omitempty"`
 }
 
 type Grpc struct {
@@ -25,6 +26,7 @@ type Grpc struct {
 	Service   string    `json:"service"`
 	Useragent string    `json:"useragent"`
 	Referer   string    `json:"referer"`
+	Payload   string    `json:"payload,omitempty"`
 }
 
 type Log struct {
@@ -33,9 +35,10 @@ type Log struct {
 	Timestamp   int64       `json:"timestamp"`
 	Message     string      `json:"message"`
 	Level       string      `json:"level"`
+	Event       *string     `json:",omitempty"`
 	Downstream  *Downstream `json:",omitempty"`
-	StackTrace  string      `json:",omitempty"`
-	Code        int         `json:",omitempty"`
+	StackTrace  *string     `json:",omitempty"`
+	Code        *int        `json:",omitempty"`
 }
 
 type GrpcCodes int64
@@ -129,7 +132,7 @@ func New(conf Config) *Config {
 	return &conf
 }
 
-func logMessage(c Config, message string, level string, downstream *Downstream, stackTrace *string, code *int, callback func(logJSON string)) {
+func logMessage(c Config, message string, level string, event *string, downstream *Downstream, stackTrace *string, code *int, callback func(logJSON string)) {
 	rootleLog := Log{
 		ID:          *c.ID,
 		Application: *c.Application,
@@ -138,28 +141,37 @@ func logMessage(c Config, message string, level string, downstream *Downstream, 
 		Level:       level,
 	}
 	if level == "ERROR" {
+		rootleLog.Event = event
 		rootleLog.Downstream = downstream
-		rootleLog.StackTrace = *stackTrace
-		rootleLog.Code = *code
+		rootleLog.StackTrace = stackTrace
+		rootleLog.Code = code
 	}
 	jsonLog, _ := json.Marshal(rootleLog)
 	callback(string(jsonLog))
 }
 
 func (c *Config) Info(message string) {
-	logMessage(*c, message, "INFO", nil, nil, nil, func(logJSON string) {
+	logMessage(*c, message, "INFO", nil, nil, nil, nil, func(logJSON string) {
 		log.Println(logJSON)
 	})
 }
 
 func (c *Config) Warn(message string) {
-	logMessage(*c, message, "WARN", nil, nil, nil, func(logJSON string) {
+	logMessage(*c, message, "WARN", nil, nil, nil, nil, func(logJSON string) {
 		log.Println(logJSON)
 	})
 }
 
-func (c *Config) Error(message string, downstream Downstream, stackTrace string, code int) {
-	logMessage(*c, message, "ERROR", &downstream, &stackTrace, &code, func(logJSON string) {
+func (c *Config) Error(message string, event *string, downstream *Downstream, stackTrace *string, code *int) {
+	logMessage(*c, message, "ERROR", event, downstream, stackTrace, code, func(logJSON string) {
 		log.Println(logJSON)
 	})
+}
+
+func String(s string) *string {
+	return &s
+}
+
+func Int(i int) *int {
+	return &i
 }
