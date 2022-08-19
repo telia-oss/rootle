@@ -35,10 +35,10 @@ type Log struct {
 	Timestamp   int64       `json:"timestamp"`
 	Message     string      `json:"message"`
 	Level       string      `json:"level"`
-	Event       *string     `json:",omitempty"`
-	Downstream  *Downstream `json:",omitempty"`
-	StackTrace  *string     `json:",omitempty"`
-	Code        *int        `json:",omitempty"`
+	Event       *string     `json:"event,omitempty"`
+	Downstream  *Downstream `json:"downstream,omitempty"`
+	StackTrace  *string     `json:"stackTrace,omitempty"`
+	Code        *int        `json:"code,omitempty"`
 }
 
 type GrpcCodes int64

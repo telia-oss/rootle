@@ -101,11 +101,11 @@ logger.error("Error, hello world!", JSON.stringify(json), {
 {
    "id":"ac12Cd-Aevd-12Grx-235f4",
    "application":"invoice-lambda",
-   "timestamp":1660898332,
+   "timestamp":1660910613,
    "message":"Hello World",
    "level":"ERROR",
-   "Event":"{\"foo\":\"bar\"}",
-   "Downstream":{
+   "event":"{\"foo\":\"bar\"}",
+   "downstream":{
       "grpc":{
          "procedure":"GetInvoice",
          "code":13,
@@ -123,7 +123,7 @@ logger.error("Error, hello world!", JSON.stringify(json), {
          "payload":"{\"foo\":\"bar\"}"
       }
    },
-   "StackTrace":"billing/user",
-   "Code":0
+   "stackTrace":"billing/user",
+   "code":0
 }
 ```
