@@ -5,11 +5,15 @@ const logger = new Rootle("ac12Cd-Aevd-12Grx-235f4", "billing-Lambda");
 logger.info("Info, hello world!");
 logger.warn("Warn, hello world!");
 
+
 const json = {
     "foo": "bar"
 };
 
-logger.error("Error, hello world!", JSON.stringify(json), {
+// Can be set in Rootle initlization `new Rootle(id, application, event)`
+logger.setEvent(JSON.stringify(json))
+
+logger.error("Error, hello world!", {
     http: {
         method: "GET",
         statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,

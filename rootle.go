@@ -162,8 +162,8 @@ func (c *Config) Warn(message string) {
 	})
 }
 
-func (c *Config) Error(message string, event *string, downstream *Downstream, stackTrace *string, code *int) {
-	logMessage(*c, message, "ERROR", event, downstream, stackTrace, code, func(logJSON string) {
+func (c *Config) Error(message string, downstream *Downstream, stackTrace *string, code *int) {
+	logMessage(*c, message, "ERROR", c.Event, downstream, stackTrace, code, func(logJSON string) {
 		log.Println(logJSON)
 	})
 }

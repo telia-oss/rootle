@@ -76,7 +76,10 @@ data := map[string]interface{}{
 
 json, _ := json.Marshal(data)
 
-logger.Error("Hello World", rootle.String(string(json)), &rootle.Downstream{
+// can be chained in the New function.
+logger.WithEvent(string(json))
+
+logger.Error("Hello World", &rootle.Downstream{
   Http: &rootle.Http{
     Method:     "GET",
     StatusCode: rootle.INTERNAL_SERVER_ERROR,
@@ -133,18 +136,18 @@ val logger = Rootle("ac12Cd-Aevd-12Grx-235f4", "Billing-lambda")
 logger.info("Hello World")
 logger.warn("Hello World")
 
+  val jsonObject = JsonObject()
+  jsonObject.addProperty("foo", "bar")
+  // Can be set in Rootle initlization `Rootle(id, application, event)`
+  logger.setEvent(jsonObject.toString())
 
-val logger = Rootle("ac12Cd-Aevd-12Grx-235f4", "billing")
+  logger.error("Error message", rootle.Downstream(rootle.Http("GET", StatusCode.InternalServerError.code, "http://localhost:8080/invoice/123",
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+          "http://localhost:8080/",  jsonObject.toString()),
+          rootle.Grpc("GetInvoice", GrpcCodes.internalError.code, "invoice",
+                  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+                  "http://localhost:8080/", jsonObject.toString())), "billing/user", 0);
 
-val jsonObject = JsonObject()
-jsonObject.addProperty("foo", "bar")
-
-logger.error("Error message", jsonObject.toString(), rootle.Downstream(rootle.Http("GET", StatusCode.InternalServerError.code, "http://localhost:8080/invoice/123",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
-        "http://localhost:8080/",  jsonObject.toString()),
-        rootle.Grpc("GetInvoice", GrpcCodes.internalError.code, "invoice",
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
-                "http://localhost:8080/", jsonObject.toString())), "billing/user", 0);
 ```
 ## Output example
 ```

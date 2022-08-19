@@ -19,7 +19,9 @@ func main() {
 
 	json, _ := json.Marshal(data)
 
-	logger.Error("Hello World", rootle.String(string(json)), &rootle.Downstream{
+	logger.WithEvent(string(json))
+
+	logger.Error("Hello World", &rootle.Downstream{
 		Http: &rootle.Http{
 			Method:     "GET",
 			StatusCode: rootle.INTERNAL_SERVER_ERROR,
