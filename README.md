@@ -1,4 +1,4 @@
-![Rootle](https://github.com/telia-oss/rootle/blob/master/media/logo.png)
+![Rootle](https://github.com/telia-oss/rootle/blob/main/media/logo.png)
 # Rootle
 
 Cross language structured log library.
