@@ -2,7 +2,6 @@
   <img src="https://github.com/telia-oss/rootle/blob/main/media/logo.png?raw=true" alt="Rootle"/>
 </p>
 
-# Rootle
 
 Cross language structured log library.
 
