@@ -10,18 +10,48 @@ Cross language structured log library.
 | Warn         | (message)  |
 | Error         | (message, downstream, stacktrace, code)  |
 
-## Log message structure
+## Log structure
 
-| Field | type |
-| ------------- | ------------- |
-| id  | string  |
-| application  | string  |
-| timestamp  | Timestamp  |
-| message  | string  |
-| level  | string  |
-| downstream  | Downstream  |
-| stacktrace  | string  |
-| code "exit code"  | int  |
+| Field         | Type          | Required
+| ------------- | ------------- | ------------- |
+| id            | string        |Yes            |
+| application   | string        |Yes            |
+| timestamp     | Timestamp     |Yes            |
+| message       | string        |Yes            |
+| level         | string        |Yes            |
+| event         | string        |No             |
+| downstream    | Downstream    |No             |
+| stacktrace    | string        |No             |
+| code "exit code"  | int       |No             |
+
+###  Downstream structure
+
+| Field         | Type          | Required
+| ------------- | ------------- | ------------- |
+| http          | Http          |No             |
+| grpc          | Grpc          |No             |
+
+####  Http structure
+
+| Field         | Type          | Required
+| ------------- | ------------- | ------------- |
+| method        | string        |No             |
+| statusCode    | HttpStatusCode(enum) |No      |
+| url           | string        |No             |
+| useragent     | string        |No             |
+| referer       | string        |No             |
+| payload       | string        |No             |
+
+####  Grpc structure
+
+| Field         | Type          | Required
+| ------------- | ------------- | ------------- |
+| procedure     | string        |No             |
+| code          | GrpcCodes(enum) |No           |
+| service       | string        |No             |
+| useragent     | string        |No             |
+| referer       | string        |No             |
+| payload       | string        |No             |
 
 
 ## Install and usage
@@ -33,21 +63,67 @@ npm i rootle
 
 - usage
 ```
-const log = new Rootle("123", "billing-Lambda");
+const logger = new Rootle("ac12Cd-Aevd-12Grx-235f4", "billing-Lambda");
 
-log.info("Info, hello world!");
-log.warn("Warn, hello world!")
-log.error("Error, hello world!", {
-    code: 500,
-    host: "localhost"
+logger.info("Info, hello world!");
+logger.warn("Warn, hello world!");
+
+var json = {
+    "foo": "bar"
+};
+logger.error("Error, hello world!", JSON.stringify(json), {
+    http: {
+        method: "GET",
+        statusCode: rootle_1.HttpStatusCode.INTERNAL_SERVER_ERROR,
+        url: "http://localhost:8080/invoice/123",
+        useragent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+        referer: "http://localhost:8080/",
+        payload: JSON.stringify(json)
+    },
+    grpc: {
+        procedure: "GetInvoice",
+        code: rootle_1.GrpcCodes.INTERNAL,
+        service: "invoice",
+        useragent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+        referer: "http://localhost:8080/",
+        payload: JSON.stringify(json)
+    }
 }, "billing/user", 0);
 ```
 
 ## Output example
 ```
-- Info: {"id":"123","application":"invoice-lambda","timestamp":1660307642,"message":"Hello World","level":"INFO","Downstream":{"code":0,"host":""}}
+- Info: {"id":"ac12Cd-Aevd-12Grx-235f4","application":"invoice-lambda","timestamp":1660741987,"message":"Hello World","level":"INFO"}
 
-- Warn: {"id":"123","application":"invoice-lambda","timestamp":1660307642,"message":"Hello World","level":"WARN","Downstream":{"code":0,"host":""}}
+- Warn: {"id":"ac12Cd-Aevd-12Grx-235f4","application":"invoice-lambda","timestamp":1660741987,"message":"Hello World","level":"WARN"}
 
-- Error: {"id":"123","application":"invoice-lambda","timestamp":1660307642,"message":"Hello World","level":"ERROR","Downstream":{"code":500,"host":"localhost"},"StackTrace":"billing/user"}
+- Error: 
+{
+   "id":"ac12Cd-Aevd-12Grx-235f4",
+   "application":"invoice-lambda",
+   "timestamp":1660898332,
+   "message":"Hello World",
+   "level":"ERROR",
+   "Event":"{\"foo\":\"bar\"}",
+   "Downstream":{
+      "grpc":{
+         "procedure":"GetInvoice",
+         "code":13,
+         "service":"invoice",
+         "useragent":"\t/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+         "referer":"http://localhost:8080/",
+         "payload":"{\"foo\":\"bar\"}"
+      },
+      "http":{
+         "method":"GET",
+         "status_code":500,
+         "url":"http://localhost:8080/invoice/123",
+         "useragent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+         "referer":"http://localhost:8080/",
+         "payload":"{\"foo\":\"bar\"}"
+      }
+   },
+   "StackTrace":"billing/user",
+   "Code":0
+}
 ```

@@ -4,19 +4,21 @@ declare interface Downstream {
 }
 
 declare interface Http {
-    method: string;
-    statusCode: HttpStatusCode;
-    url: string;
-    useragent: string;
-    referer: string;
+    method?: string;
+    statusCode?: HttpStatusCode;
+    url?: string;
+    useragent?: string;
+    referer?: string;
+    payload?: string;
 }
 
 declare interface Grpc {
-    procedure: string;
-    code: GrpcCodes;
-    service: string;
-    useragent: string;
-    referer: string;
+    procedure?: string;
+    code?: GrpcCodes;
+    service?: string;
+    useragent?: string;
+    referer?: string;
+    payload?: string;
 }
 
 declare interface Log {
@@ -25,6 +27,7 @@ declare interface Log {
     timestamp: number;
     message: string;
     level: string;
+    event?: string;
     downstream?: Downstream;
     stackTrace?: string;
     code?: number;
@@ -127,7 +130,7 @@ export default class Rootle {
     }
 
     // @ts-ignore
-    private logMessage(message: string, level: string, downstream?: Downstream, stackTrace?: string, code?: number, callback: Logger) {
+    private logMessage(message: string, level: string, event?: string, downstream?: Downstream, stackTrace?: string, code?: number, callback: Logger) {
         const log: Log = {
             id: this.id,
             application: this.application,
@@ -136,28 +139,29 @@ export default class Rootle {
             level: level
         };
         if (level === "ERROR") {
-            log.downstream = downstream
-            log.stackTrace = stackTrace
-            log.code = code
+            log.event = event;
+            log.downstream = downstream;
+            log.stackTrace = stackTrace;
+            log.code = code;
         }
 
         callback(JSON.stringify(log));
 
     }
     public info(message: string) {
-        this.logMessage(message, "INFO", undefined, undefined, undefined, (logJson) => {
+        this.logMessage(message, "INFO", undefined,undefined, undefined, undefined, (logJson) => {
             console.log(logJson);
         });
     }
 
     public warn(message: string) {
-        this.logMessage(message, "WARN", undefined, undefined, undefined, (logJson) => {
+        this.logMessage(message, "WARN", undefined, undefined, undefined, undefined, (logJson) => {
             console.log(logJson);
         });
     }
 
-    public error(message: string, downstream: Downstream, stackTrace: string, code: number) {
-        this.logMessage(message, "ERROR", downstream, stackTrace, code, (logJson) => {
+    public error(message: string, event?: string, downstream?: Downstream, stackTrace?: string, code?: number) {
+        this.logMessage(message, "ERROR", event, downstream, stackTrace, code, (logJson) => {
             console.log(logJson);
         });
     }
