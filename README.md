@@ -67,7 +67,9 @@ import (
 	rootle "github.com/telia-oss/rootle"
 )
 
-logger := rootle.New(*rootle.NewConfig().WithID("ac12Cd-Aevd-12Grx-235f4").WithApplication("invoice-lambda"))
+	ctx := context.Background()
+
+logger := rootle.New(ctx, *rootle.NewConfig().WithID("ac12Cd-Aevd-12Grx-235f4").WithApplication("invoice-lambda"))
 
 logger.Info("Hello World")
 logger.Warn("Hello World")
@@ -78,10 +80,7 @@ data := map[string]interface{}{
 
 json, _ := json.Marshal(data)
 
-// Can be chained in the New function.
-logger.WithEvent(string(json))
-
-logger.Error("Hello World", &rootle.Downstream{
+logger.Error("Hello World", rootle.String(string(json)), &rootle.Downstream{
   Http: &rootle.Http{
     Method:     "GET",
     StatusCode: rootle.INTERNAL_SERVER_ERROR,
@@ -100,41 +99,8 @@ logger.Error("Hello World", &rootle.Downstream{
   },
 }, rootle.String("billing/user"), rootle.Int(0))
 ```
-- TypeScript
-```
-import Rootle, {HttpStatusCode, GrpcCodes}  from 'rootle';
+- [TypeScript] (./typescript/README.md)
 
-const logger = new Rootle("ac12Cd-Aevd-12Grx-235f4", "billing-Lambda");
-
-logger.info("Info, hello world!");
-logger.warn("Warn, hello world!");
-
-var json = {
-    "foo": "bar"
-};
-
-// Can be set in Rootle initlization `new Rootle(id, application, event)`
-logger.setEvent(JSON.stringify(json))
-
-logger.error("Error, hello world!", {
-    http: {
-        method: "GET",
-        statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
-        url: "http://localhost:8080/invoice/123",
-        useragent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
-        referer: "http://localhost:8080/",
-        payload: JSON.stringify(json)
-    },
-    grpc: {
-        procedure: "GetInvoice",
-        code:      GrpcCodes.INTERNAL,
-        service:   "invoice",
-        useragent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
-        referer:   "http://localhost:8080/",
-        payload: JSON.stringify(json)
-    }
-}, "billing/user", 0);
-```
 - Kotlin
 ```
 val logger = Rootle("ac12Cd-Aevd-12Grx-235f4", "Billing-lambda")

@@ -21,7 +21,6 @@ func main() {
 
 	json, _ := json.Marshal(data)
 
-	// If event is passed to Error methiod, it will overwrite the event set in WithEvent.
 	logger.Error("Hello World", rootle.String(string(json)), &rootle.Downstream{
 		Http: &rootle.Http{
 			Method:     "GET",

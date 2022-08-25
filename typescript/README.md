@@ -72,10 +72,7 @@ var json = {
     "foo": "bar"
 };
 
-// Can be set in Rootle initlization `new Rootle(id, application, event)`
-logger.setEvent(JSON.stringify(json))
-
-logger.error("Error, hello world!", {
+logger.error("Error, hello world!", JSON.stringify(json), {
     http: {
         method: "GET",
         statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,

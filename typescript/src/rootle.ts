@@ -1,3 +1,15 @@
+declare interface Log {
+    id: string;
+    application: string;
+    timestamp: number;
+    message: string;
+    level: string;
+    event?: string;
+    downstream?: Downstream;
+    stackTrace?: string;
+    code?: number;
+}
+
 declare interface Downstream {
     grpc?: Grpc;
     http?: Http;
@@ -19,18 +31,6 @@ declare interface Grpc {
     useragent?: string;
     referer?: string;
     payload?: string;
-}
-
-declare interface Log {
-    id: string;
-    application: string;
-    timestamp: number;
-    message: string;
-    level: string;
-    event?: string;
-    downstream?: Downstream;
-    stackTrace?: string;
-    code?: number;
 }
 
 export enum GrpcCodes {
@@ -123,16 +123,14 @@ declare interface Logger {
 export default class Rootle {
     private id: string;
     private application: string;
-    private event?: string;
 
-    constructor(id: string, application: string, event?: string) {
+    constructor(id: string, application: string) {
         this.id = id;
         this.application = application;
-        this.event = event;
     }
 
     // @ts-ignore
-    private logMessage(message: string, level: string, downstream?: Downstream, stackTrace?: string, code?: number, callback: Logger) {
+    private logMessage(message: string, level: string, event?: string, downstream?: Downstream, stackTrace?: string, code?: number, callback: Logger) {
         const log: Log = {
             id: this.id,
             application: this.application,
@@ -141,7 +139,7 @@ export default class Rootle {
             level: level
         };
         if (level === "ERROR") {
-            log.event = this.event;
+            log.event = event;
             log.downstream = downstream;
             log.stackTrace = stackTrace;
             log.code = code;
@@ -151,25 +149,21 @@ export default class Rootle {
 
     }
     public info(message: string) {
-        this.logMessage(message, "INFO", undefined, undefined, undefined, (logJson) => {
+        this.logMessage(message, "INFO", undefined, undefined, undefined, undefined, (logJson) => {
             console.log(logJson);
         });
     }
 
     public warn(message: string) {
-        this.logMessage(message, "WARN", undefined, undefined, undefined, (logJson) => {
+        this.logMessage(message, "WARN", undefined, undefined, undefined, undefined, (logJson) => {
             console.log(logJson);
         });
     }
 
-    public error(message: string, downstream?: Downstream, stackTrace?: string, code?: number) {
-        this.logMessage(message, "ERROR", downstream, stackTrace, code, (logJson) => {
+    public error(message: string, event?: string, downstream?: Downstream, stackTrace?: string, code?: number) {
+        this.logMessage(message, "ERROR", event, downstream, stackTrace, code, (logJson) => {
             console.log(logJson);
         });
-    }
-
-    public setEvent(event: string) {
-        this.event = event;
     }
 
 }
