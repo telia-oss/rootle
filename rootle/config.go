@@ -1,9 +1,14 @@
 package rootle
 
+type InterceptorRequestSources struct {
+	Useragent string
+	Referer   string
+}
+
 type Config struct {
 	ID          *string
 	Application *string
-	Event       *string
+	Interceptor InterceptorRequestSources
 }
 
 func NewConfig() *Config {
@@ -20,7 +25,7 @@ func (c *Config) WithApplication(application string) *Config {
 	return c
 }
 
-func (c *Config) WithEvent(event string) *Config {
-	c.Event = &event
+func (c *Config) WithInterceptor(interceptor InterceptorRequestSources) *Config {
+	c.Interceptor = interceptor
 	return c
 }

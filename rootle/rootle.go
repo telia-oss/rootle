@@ -1,10 +1,23 @@
 package rootle
 
 import (
+	"context"
 	"encoding/json"
 	"log"
 	"time"
 )
+
+type Log struct {
+	ID          string      `json:"id"`
+	Application string      `json:"application"`
+	Timestamp   int64       `json:"timestamp"`
+	Message     string      `json:"message"`
+	Level       string      `json:"level"`
+	Event       *string     `json:"event,omitempty"`
+	Downstream  *Downstream `json:"downstream,omitempty"`
+	StackTrace  *string     `json:"stackTrace,omitempty"`
+	Code        *int        `json:"code,omitempty"`
+}
 
 type Downstream struct {
 	Grpc *Grpc `json:"grpc,omitempty"`
@@ -27,18 +40,6 @@ type Grpc struct {
 	Useragent string    `json:"useragent"`
 	Referer   string    `json:"referer"`
 	Payload   string    `json:"payload,omitempty"`
-}
-
-type Log struct {
-	ID          string      `json:"id"`
-	Application string      `json:"application"`
-	Timestamp   int64       `json:"timestamp"`
-	Message     string      `json:"message"`
-	Level       string      `json:"level"`
-	Event       *string     `json:"event,omitempty"`
-	Downstream  *Downstream `json:"downstream,omitempty"`
-	StackTrace  *string     `json:"stackTrace,omitempty"`
-	Code        *int        `json:"code,omitempty"`
 }
 
 type GrpcCodes int64
@@ -128,8 +129,15 @@ const (
 	NETWORK_AUTHENTICATION_REQUIRED HttpStatusCode = 511
 )
 
-func New(conf Config) *Config {
+var localRootle *Config
+
+func New(ctx context.Context, conf Config) *Config {
+	localRootle = &conf
 	return &conf
+}
+
+func GetRootle() *Config {
+	return localRootle
 }
 
 func logMessage(c Config, message string, level string, event *string, downstream *Downstream, stackTrace *string, code *int, callback func(logJSON string)) {
@@ -162,8 +170,8 @@ func (c *Config) Warn(message string) {
 	})
 }
 
-func (c *Config) Error(message string, downstream *Downstream, stackTrace *string, code *int) {
-	logMessage(*c, message, "ERROR", c.Event, downstream, stackTrace, code, func(logJSON string) {
+func (c *Config) Error(message string, event *string, downstream *Downstream, stackTrace *string, code *int) {
+	logMessage(*c, message, "ERROR", event, downstream, stackTrace, code, func(logJSON string) {
 		log.Println(logJSON)
 	})
 }

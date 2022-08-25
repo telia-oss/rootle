@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package server;
+
+option go_package = 'pb/server';
+
+message MockRequest {
+    string client = 1;
+    string agent = 2;
+}
+
+message MockReply {
+    string name = 1;
+}
+
+service Greeter {
+    rpc SayHello (MockRequest) returns (MockReply) {}
+}

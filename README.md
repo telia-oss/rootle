@@ -3,7 +3,7 @@
 </p>
 
 
-Cross language structured log library.
+Cross language structured log APIs and, [error log gRPC client interceptor](./interceptor/README.md).
 
 ## Methods
 
@@ -11,7 +11,7 @@ Cross language structured log library.
 | ------------- | ------------- |
 | Info          |(message)  |
 | Warn          | (message)  |
-| Error         | (message, downstream, stacktrace, code)  |
+| Error         | (message, event, downstream, stacktrace, code)  |
 
 ## Log structure
 
@@ -56,7 +56,9 @@ Cross language structured log library.
 | referer       | string        |No             |
 | payload       | string        |No             |
 
-## Languages
+## Usage
+
+[Examples](https://github.com/telia-oss/rootle/tree/master/example)
 
 - Go
 ```
