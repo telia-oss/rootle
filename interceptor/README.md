@@ -7,7 +7,7 @@ Error log gRPC client uses [Rootle](https://github.com/telia-oss/rootle#grpc-str
 | Language      | Status |
 | ------------- | ------------- |
 | Go            |Yes |
-| TypeScript    | WIP  |
+| TypeScript    |Yes  |
 | Kotlin        | WIP|
 
 ## Referer and User-Agent
@@ -45,3 +45,5 @@ logger := rootle.New(ctx, *rootle.NewConfig().WithID("ac12Cd-Aevd-12Grx-235f4").
 conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock(), grpc.WithUnaryInterceptor(interceptor.ClientInterceptor))
 
 ```
+
+- [TypeScript] (./typescript/interceptor/README.md)

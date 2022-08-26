@@ -1,0 +1,22 @@
+{
+  "name": "rootle-grpc-interceptor",
+  "version": "0.0.1",
+  "description": "TS implementation of Rootle log gRPC clinet interceptor",
+  "main": "dist/interceptor.js",
+  "types": "./dist/interceptor.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.7.2"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.6.10",
+    "rootle": "^0.4.0"
+  }
+}
