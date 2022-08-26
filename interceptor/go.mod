@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/Jeffail/gabs v1.4.0
-	github.com/telia-oss/rootle v0.3.0
+	github.com/telia-oss/rootle v0.4.0
 	google.golang.org/grpc v1.49.0
 	google.golang.org/protobuf v1.27.1
 )
