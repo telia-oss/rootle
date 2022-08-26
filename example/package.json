@@ -4,7 +4,8 @@
   "description": "",
   "main": "interceptor.js",
   "dependencies": {
-    "@grpc/grpc-js": "^1.6.10"
+    "@grpc/grpc-js": "^1.6.10",
+    "rootle-grpc-interceptor": "0.0.1"
   },
   "devDependencies": {},
   "scripts": {

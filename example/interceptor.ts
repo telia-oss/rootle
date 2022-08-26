@@ -2,7 +2,7 @@ import * as grpc from "@grpc/grpc-js";
 
 import Rootle from '../typescript/dist/rootle';
 import * as grpcService from "./server";
-import Interceptor from "../typescript/interceptor/dist/interceptor";
+import Interceptor from "rootle-grpc-interceptor";
 
 const client = new grpcService.GreeterClient(
     "localhost:6000",
