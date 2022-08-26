@@ -120,13 +120,27 @@ declare interface Logger {
     (logJson: string): void;
 }
 
+declare interface InterceptorRequestSources {
+    useragent?: string;
+    referer?: string;
+}
+
+let localId: string;
+let localApplication: string;
+let localInterceptorRequestSources: InterceptorRequestSources | undefined;
+
 export default class Rootle {
     private id: string;
     private application: string;
+    private interceptorRequestSources? : InterceptorRequestSources;
 
-    constructor(id: string, application: string) {
+    constructor(id: string, application: string, interceptorRequestSources?: InterceptorRequestSources) {
         this.id = id;
         this.application = application;
+        this.interceptorRequestSources = interceptorRequestSources;
+        localId = id;
+        localApplication = application;
+        localInterceptorRequestSources = interceptorRequestSources;
     }
 
     // @ts-ignore
@@ -166,4 +180,11 @@ export default class Rootle {
         });
     }
 
+    public getInterceptorRequestSources() {
+        return this.interceptorRequestSources
+    }
+}
+
+export const GetRootle = (): Rootle => {
+    return new Rootle(localId, localApplication, localInterceptorRequestSources);
 }
