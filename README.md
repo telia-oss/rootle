@@ -99,7 +99,7 @@ logger.Error("Hello World", rootle.String(string(json)), &rootle.Downstream{
   },
 }, rootle.String("billing/user"), rootle.Int(0))
 ```
-- [TypeScript] (./typescript/README.md)
+- [TypeScript](./typescript/README.md)
 
 - Kotlin
 ```

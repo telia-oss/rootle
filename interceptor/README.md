@@ -46,4 +46,4 @@ conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock(), grpc.With
 
 ```
 
-- [TypeScript] (./typescript/interceptor/README.md)
+- [TypeScript](./typescript/interceptor/README.md)
