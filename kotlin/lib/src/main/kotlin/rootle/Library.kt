@@ -1,7 +1,6 @@
 package rootle
 
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 
 enum class GrpcCodes(val code: Int) {
     Ok(0),
@@ -116,14 +115,11 @@ class Rootle(private val id: String, private val application: String, private va
         println(logJsonString)
     }
 
-    fun error(message: String, downstream: Downstream? = null, stackTrace: String? = null, code: Int? = null) {
+    fun error(message: String, event: String? = null, downstream: Downstream? = null, stackTrace: String? = null, code: Int? = null) {
         val log = Log(this.id, this.application, System.currentTimeMillis().toString(), message,
-                "ERROR", this.event, downstream, stackTrace, code)
+                "ERROR", event, downstream, stackTrace, code)
         val logJsonString = Gson().toJson(log)
         println(logJsonString)
     }
 
-    fun setEvent(event: String) {
-        this.event = event
-    }
 }
