@@ -14,7 +14,7 @@ const Interceptor = function (options: any, nextCall: Function) {
     let savedSendMessage: any
     let savedMessageNext: Function;
     const servicePath = options.method_definition.path.split('/');
-    const service = servicePath[1].split('.')[1] || "";
+    const service = servicePath[1] || "";
     const procedure = servicePath[2] || "";
 
     const requester: Requester = {
