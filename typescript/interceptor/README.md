@@ -15,7 +15,7 @@ Error log gRPC client uses [Rootle](https://github.com/telia-oss/rootle#grpc-str
 gRPC interceptors has the incoming request as an input to tell the Rootle interceptor which filed in the incoming request should be used as `referer` and, `useragent` an interface of type `InterceptorRequestSources` must be passed to the `Rootle` constructor. 
 
 ```
-requestHeaders := {
+const requestHeaders = {
     useragent: "agent",
     referer:   "client",
 }
