@@ -2,14 +2,6 @@
 
 Error log gRPC client uses [Rootle](https://github.com/telia-oss/rootle#grpc-structure) log API to log gRPC errors.
 
-## Support 
-
-| Language      | Status |
-| ------------- | ------------- |
-| Go            |Yes |
-| TypeScript    |Yes  |
-| Kotlin        | WIP|
-
 ## Referer and User-Agent
 
 gRPC interceptors has the incoming request as an input to tell the Rootle interceptor which filed in the incoming request should be used as `referer` and, `useragent` an interface of type `InterceptorRequestSources` must be passed to the `Rootle` constructor. 

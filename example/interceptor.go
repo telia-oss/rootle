@@ -23,7 +23,7 @@ func NewClient(address string) (server.GreeterClient, *grpc.ClientConn, error) {
 }
 
 func sayHello() (string, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	client, conn, err := NewClient("localhost:6000")
 	if err != nil {
 		log.Fatalf("fail: %v", err)

@@ -99,7 +99,6 @@ logger.Error("Hello World", rootle.String(string(json)), &rootle.Downstream{
   },
 }, rootle.String("billing/user"), rootle.Int(0))
 ```
-- [TypeScript](./typescript/README.md)
 
 - Kotlin
 ```
@@ -117,9 +116,9 @@ logger.error("Error message", jsonObject.toString(), logger.Downstream(logger.Ht
     logger.Grpc("GetInvoice", GrpcCodes.internalError.code, "invoice",
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
         "http://localhost:8080/", jsonObject.toString())), "billing/user", 0);
-
-
 ```
+
+- [TypeScript](./typescript/README.md)
 ## Output example
 ```
 - Info: {"id":"ac12Cd-Aevd-12Grx-235f4","application":"invoice-lambda","timestamp":1660741987,"message":"Hello World","level":"INFO"}

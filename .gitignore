@@ -1,5 +1,7 @@
 example/main.js
+example/kotlin/*
 main.js
 main.js.map
 example/node_modules
 mock/server/node_modules/
+.secrets
