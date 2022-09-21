@@ -45,6 +45,8 @@ const Interceptor = function (options: any, nextCall: Function) {
                                 payload: JSON.stringify(savedSendMessage)
                             }
                         }, status.details, 1);
+                        savedMessageNext(savedReceiveMessage);
+                        next(status);
                     } else {
                         savedMessageNext(savedReceiveMessage);
                         next(status);
