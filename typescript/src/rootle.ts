@@ -1,4 +1,8 @@
-declare interface Log {
+import { FileTransport as fileTransport } from './transports/file';
+
+export const FileTransport = fileTransport;
+
+export declare interface Log {
     id: string;
     application: string;
     timestamp: number;
@@ -128,19 +132,23 @@ declare interface InterceptorRequestSources {
 let localId: string;
 let localApplication: string;
 let localInterceptorRequestSources: InterceptorRequestSources | undefined;
+let localFileTrasport: fileTransport | undefined;
 
 export default class Rootle {
     private id: string;
     private application: string;
-    private interceptorRequestSources? : InterceptorRequestSources;
+    private interceptorRequestSources?: InterceptorRequestSources;
+    private fileTrasport?: fileTransport;
 
-    constructor(id: string, application: string, interceptorRequestSources?: InterceptorRequestSources) {
+    constructor(id: string, application: string, interceptorRequestSources?: InterceptorRequestSources, fileTrasport?: fileTransport) {
         this.id = id;
         this.application = application;
         this.interceptorRequestSources = interceptorRequestSources;
+        this.fileTrasport = fileTrasport;
         localId = id;
         localApplication = application;
         localInterceptorRequestSources = interceptorRequestSources;
+        localFileTrasport = fileTrasport;
     }
 
     // @ts-ignore
@@ -159,6 +167,9 @@ export default class Rootle {
             log.code = code;
         }
 
+        if (this.fileTrasport) {
+            this.fileTrasport.writeLogTofile(log);
+        }
         callback(JSON.stringify(log));
 
     }
@@ -186,5 +197,5 @@ export default class Rootle {
 }
 
 export const GetRootle = (): Rootle => {
-    return new Rootle(localId, localApplication, localInterceptorRequestSources);
+    return new Rootle(localId, localApplication, localInterceptorRequestSources, localFileTrasport);
 }
