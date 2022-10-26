@@ -16,8 +16,14 @@ const main = () => {
   const logger = new Rootle("ac12Cd-Aevd-12Grx-235f4", "billing-Lambda", {
     referer: "client",
     useragent: "agent"
-  }, new FileTransport("loggs", __dirname));
+  }, new FileTransport({
+    enable: true,
+    filename: "logs",
+    path: __dirname
+}));
 
+  logger.info("START");
+  logger.info("START");
   logger.info("START");
 
   return new Promise<any>((resolve, reject) => {

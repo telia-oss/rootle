@@ -1,6 +1,10 @@
 import Rootle, {HttpStatusCode, GrpcCodes, FileTransport}  from '../typescript/dist/rootle';
 
-const logger = new Rootle("ac12Cd-Aevd-12Grx-235f4", "billing-Lambda", undefined, new FileTransport("loggs", __dirname));
+const logger = new Rootle("ac12Cd-Aevd-12Grx-235f4", "billing-Lambda", undefined, new FileTransport({
+    enable: false,
+    filename: "logs",
+    path: __dirname
+}));
 
 logger.info("Info, hello world!");
 logger.warn("Warn, hello world!");

@@ -10,6 +10,18 @@ Cross language structured log library.
 | Warn         | (message)  |
 | Error         | (message, downstream, stacktrace, code)  |
 
+## Transports
+
+File transport, allows writting logs to file
+
+```
+const logger = new Rootle("ac12Cd-Aevd-12Grx-235f4", "billing-Lambda", undefined, new FileTransport({
+    enable: true,
+    filename: "logs",
+    path: __dirname
+}));
+```
+
 ## Log structure
 
 | Field         | Type          | Required

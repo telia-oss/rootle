@@ -1,30 +1,33 @@
 import fs from "fs";
 import { Log } from '../rootle';
 
+type config = {
+  filename: string,
+  path: string,
+  enable: boolean
+}
 export class FileTransport {
-  private fileName: string;
-  private filePath: string;
-  constructor(fileName: string, filePath: string) {
-    this.fileName = fileName;
-    this.filePath = filePath;
+  private config: config;
+  constructor(config: config) {
+    this.config = config;
   }
 
   public writeLogTofile(log: Log) {
-    const path = this.filePath + `/${this.fileName}.json`;
+    if (!this.config.enable) return;
+    const path = this.config.path + `/${this.config.filename}.json`;
     if (fs.existsSync(path)) {
-      const loggs: Log[] = read(path);
-      if (!loggs) {
-        fs.appendFile(path, JSON.stringify([log]) + '\n', () => { });
+      const logs: Log[] = read(path);
+      if (!logs) {
+        fs.appendFileSync(path, JSON.stringify([log]) + '\n');
       } else {
-        loggs.push(log);
-        fs.writeFile(path, JSON.stringify(loggs) + '\n', () => { });
+        logs.push(log);
+        fs.writeFileSync(path, JSON.stringify(logs) + '\n');
       }
 
     } else {
-      const logFile = fs.createWriteStream(path, { flags: 'w' });
-      const loggs: Log[] = [];
-      loggs.push(log);
-      logFile.write(JSON.stringify(loggs) + '\n');
+      const logs: Log[] = [];
+      logs.push(log);
+      fs.writeFileSync(path, JSON.stringify(logs) + '\n');
     }
   }
 }

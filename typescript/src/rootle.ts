@@ -167,7 +167,7 @@ export default class Rootle {
             log.code = code;
         }
 
-        if (this.fileTrasport) {
+        if (this.fileTrasport) {            
             this.fileTrasport.writeLogTofile(log);
         }
         callback(JSON.stringify(log));
