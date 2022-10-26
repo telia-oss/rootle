@@ -13,6 +13,16 @@ Cross language structured log APIs and, [error log gRPC client interceptor](./in
 | Warn          | (message)  |
 | Error         | (message, event, downstream, stacktrace, code)  |
 
+## Transports
+
+File transport, allows writting logs to file
+
+| Language          | status |
+| ------------- | ------------- |
+| [TypeScript](./typescript/README.md)          |:white_check_mark: |
+| Go          | Planned  |
+| Kotlin         | Planned |
+
 ## Log structure
 
 | Field         | Type          | Required
