@@ -1,1 +1,3 @@
+github.com/telia-oss/rootle v0.4.0 h1:PP6hX6UWBwuRNQcpYdXYCyq6aGclsH4qUSW2+vEcjwA=
 github.com/telia-oss/rootle v0.4.0/go.mod h1:lnxyr9Nt5pv6jTKNaHEskq5x3h60pakIsMMN3gsS/OA=
+golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9 h1:psW17arqaxU48Z5kZ0CQnkZWQJsqcURM6tKiBApRjXI=
