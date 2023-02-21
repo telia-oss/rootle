@@ -1,4 +1,4 @@
-package rootle
+package logger
 
 import (
 	"context"

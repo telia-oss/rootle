@@ -1,4 +1,4 @@
-package rootle
+package logger
 
 type InterceptorRequestSources struct {
 	Useragent string
