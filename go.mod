@@ -3,6 +3,7 @@ module github.com/telia-oss/rootle
 go 1.18
 
 require (
+	github.com/google/uuid v1.3.0
 	github.com/telia-oss/rootle/interceptor v0.0.0-20221026105925-b6b93b7b1e2b
 	google.golang.org/grpc v1.53.0
 )

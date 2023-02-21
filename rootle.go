@@ -5,13 +5,15 @@ import (
 	"encoding/json"
 	"log"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Log struct {
 	ID          string      `json:"id"`
 	Application string      `json:"application"`
 	Timestamp   int64       `json:"timestamp"`
-	Message     string      `json:"message"`
+	Message     any         `json:"message"`
 	Level       string      `json:"level"`
 	Event       *string     `json:"event,omitempty"`
 	Downstream  *Downstream `json:"downstream,omitempty"`
@@ -133,6 +135,9 @@ var localRootle *Config
 
 func New(ctx context.Context, conf Config) *Config {
 	localRootle = &conf
+	if conf.ID == nil {
+		conf.ID = String(uuid.New().String())
+	}
 	return &conf
 }
 
@@ -140,7 +145,7 @@ func GetRootle() *Config {
 	return localRootle
 }
 
-func logMessage(c Config, message string, level string, event *string, downstream *Downstream, stackTrace *string, code *int, callback func(logJSON string)) {
+func logMessage(c Config, message any, level string, event *string, downstream *Downstream, stackTrace *string, code *int, callback func(logJSON string)) {
 	rootleLog := Log{
 		ID:          *c.ID,
 		Application: *c.Application,
@@ -158,19 +163,19 @@ func logMessage(c Config, message string, level string, event *string, downstrea
 	callback(string(jsonLog))
 }
 
-func (c *Config) Info(message string) {
+func (c *Config) Info(message any) {
 	logMessage(*c, message, "INFO", nil, nil, nil, nil, func(logJSON string) {
 		log.Println(logJSON)
 	})
 }
 
-func (c *Config) Warn(message string) {
+func (c *Config) Warn(message any) {
 	logMessage(*c, message, "WARN", nil, nil, nil, nil, func(logJSON string) {
 		log.Println(logJSON)
 	})
 }
 
-func (c *Config) Error(message string, event *string, downstream *Downstream, stackTrace *string, code *int) {
+func (c *Config) Error(message any, event *string, downstream *Downstream, stackTrace *string, code *int) {
 	logMessage(*c, message, "ERROR", event, downstream, stackTrace, code, func(logJSON string) {
 		log.Println(logJSON)
 	})
