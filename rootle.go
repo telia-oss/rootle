@@ -145,9 +145,13 @@ func GetRootle() *Config {
 	return localRootle
 }
 
-func logMessage(c Config, message any, level string, event *string, downstream *Downstream, stackTrace *string, code *int, callback func(logJSON string)) {
+func logMessage(c Config, id []string, message any, level string, event *string, downstream *Downstream, stackTrace *string, code *int, callback func(logJSON string)) {
+	var idArg = *c.ID
+	if len(id) > 0 {
+		idArg = id[0]
+	}
 	rootleLog := Log{
-		ID:          *c.ID,
+		ID:          idArg,
 		Application: *c.Application,
 		Timestamp:   time.Now().Unix(),
 		Message:     message,
@@ -163,20 +167,20 @@ func logMessage(c Config, message any, level string, event *string, downstream *
 	callback(string(jsonLog))
 }
 
-func (c *Config) Info(message any) {
-	logMessage(*c, message, "INFO", nil, nil, nil, nil, func(logJSON string) {
+func (c *Config) Info(message any, id ...string) {
+	logMessage(*c, id, message, "INFO", nil, nil, nil, nil, func(logJSON string) {
 		log.Println(logJSON)
 	})
 }
 
-func (c *Config) Warn(message any) {
-	logMessage(*c, message, "WARN", nil, nil, nil, nil, func(logJSON string) {
+func (c *Config) Warn(message any, id ...string) {
+	logMessage(*c, id, message, "WARN", nil, nil, nil, nil, func(logJSON string) {
 		log.Println(logJSON)
 	})
 }
 
-func (c *Config) Error(message any, event *string, downstream *Downstream, stackTrace *string, code *int) {
-	logMessage(*c, message, "ERROR", event, downstream, stackTrace, code, func(logJSON string) {
+func (c *Config) Error(message any, event *string, downstream *Downstream, stackTrace *string, code *int, id ...string) {
+	logMessage(*c, id, message, "ERROR", event, downstream, stackTrace, code, func(logJSON string) {
 		log.Println(logJSON)
 	})
 }
