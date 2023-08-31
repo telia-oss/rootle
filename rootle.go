@@ -12,7 +12,7 @@ import (
 type Log struct {
 	ID          string      `json:"id"`
 	Application string      `json:"application"`
-	Timestamp   int64       `json:"timestamp"`
+	Time        string      `json:"time"`
 	Message     any         `json:"message"`
 	Level       string      `json:"level"`
 	Event       *string     `json:"event,omitempty"`
@@ -145,6 +145,8 @@ func GetRootle() *Config {
 	return localRootle
 }
 
+const ISO8601 = "2006-01-02T15:04:05.999999999Z"
+
 func logMessage(c Config, id []string, message any, level string, event *string, downstream *Downstream, stackTrace *string, code *int, callback func(logJSON string)) {
 	var idArg = *c.ID
 	if len(id) > 0 {
@@ -153,7 +155,7 @@ func logMessage(c Config, id []string, message any, level string, event *string,
 	rootleLog := Log{
 		ID:          idArg,
 		Application: *c.Application,
-		Timestamp:   time.Now().Unix(),
+		Time:        time.Now().Format(ISO8601),
 		Message:     message,
 		Level:       level,
 	}

@@ -5,7 +5,7 @@ export const FileTransport = fileTransport;
 export declare interface Log {
     id: string;
     application: string;
-    timestamp: number;
+    time: string;
     message: string;
     level: string;
     event?: string;
@@ -156,7 +156,7 @@ export default class Rootle {
         const log: Log = {
             id: this.id,
             application: this.application,
-            timestamp: Date.now(),
+            time: new Date().toISOString(),
             message: message,
             level: level
         };

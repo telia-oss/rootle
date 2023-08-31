@@ -29,7 +29,7 @@ File transport, allows writting logs to file
 | ------------- | ------------- | ------------- |
 | id            | string        |Yes            |
 | application   | string        |Yes            |
-| timestamp     | Timestamp     |Yes            |
+| time          | string        |Yes            |
 | message       | string        |Yes            |
 | level         | string        |Yes            |
 | event         | string        |No             |
@@ -131,15 +131,15 @@ logger.error("Error message", jsonObject.toString(), logger.Downstream(logger.Ht
 - [TypeScript](./typescript/README.md)
 ## Output example
 ```
-- Info: {"id":"ac12Cd-Aevd-12Grx-235f4","application":"invoice-lambda","timestamp":1660741987,"message":"Hello World","level":"INFO"}
+- Info: {"id":"ac12Cd-Aevd-12Grx-235f4","application":"invoice-lambda","time":"2006-01-02T15:04:05.999999999Z","message":"Hello World","level":"INFO"}
 
-- Warn: {"id":"ac12Cd-Aevd-12Grx-235f4","application":"invoice-lambda","timestamp":1660741987,"message":"Hello World","level":"WARN"}
+- Warn: {"id":"ac12Cd-Aevd-12Grx-235f4","application":"invoice-lambda","time":"2006-01-02T15:04:05.999999999Z","message":"Hello World","level":"WARN"}
 
 - Error: 
 {
    "id":"ac12Cd-Aevd-12Grx-235f4",
    "application":"invoice-lambda",
-   "timestamp":1660910613,
+   "time":"2006-01-02T15:04:05.999999999Z",
    "message":"Hello World",
    "level":"ERROR",
    "event":"{\"foo\":\"bar\"}",
