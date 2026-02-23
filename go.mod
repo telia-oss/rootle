@@ -15,9 +15,3 @@ require (
 	google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f // indirect
 	google.golang.org/protobuf v1.36.10 // indirect
 )
-
-replace golang.org/x/net => golang.org/x/net v0.7.0
-
-replace golang.org/x/sys => golang.org/x/sys v0.5.0
-
-replace golang.org/x/text => golang.org/x/text v0.7.0
