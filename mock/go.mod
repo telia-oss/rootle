@@ -14,3 +14,9 @@ require (
 	golang.org/x/text v0.32.0 // indirect
 	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
 )
+
+replace golang.org/x/net => golang.org/x/net v0.7.0
+
+replace golang.org/x/sys => golang.org/x/sys v0.5.0
+
+replace golang.org/x/text => golang.org/x/text v0.7.0
