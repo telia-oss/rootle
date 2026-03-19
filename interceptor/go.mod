@@ -4,7 +4,7 @@ go 1.24.0
 
 require (
 	github.com/telia-oss/rootle v0.5.2
-	google.golang.org/grpc v1.79.1
+	google.golang.org/grpc v1.79.3
 )
 
 require (
