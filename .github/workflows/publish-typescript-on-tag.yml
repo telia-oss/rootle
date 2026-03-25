@@ -67,20 +67,13 @@ jobs:
             exit 1
           fi
 
-      - name: Configure npm via JFrog CLI
+      - name: Publish to JFrog
         env:
           JFROG_NPM_REPO: hid100008523-channel-api-local
-          JFROG_OIDC_USER: ${{ steps.jfrog_oidc.outputs.oidc-user }}
           JFROG_OIDC_TOKEN: ${{ steps.jfrog_oidc.outputs.oidc-token }}
         run: |
-          if [ -z "$JFROG_OIDC_USER" ] || [ -z "$JFROG_OIDC_TOKEN" ]; then
-            echo "Missing JFrog OIDC credentials from setup-jfrog-cli step"
-            exit 1
-          fi
-
-          jf npm-config \
-            --repo-resolve "$JFROG_NPM_REPO" \
-            --repo-deploy "$JFROG_NPM_REPO"
-
-      - name: Publish to JFrog
-        run: jf npm publish
+          REGISTRY_URL="https://jfrog.teliacompany.io/artifactory/api/npm/${JFROG_NPM_REPO}/"
+          REGISTRY_HOST="jfrog.teliacompany.io/artifactory/api/npm/${JFROG_NPM_REPO}/"
+          echo "@telia:registry=${REGISTRY_URL}" >> "$HOME/.npmrc"
+          echo "//${REGISTRY_HOST}:_authToken=${JFROG_OIDC_TOKEN}" >> "$HOME/.npmrc"
+          npm publish
