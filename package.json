@@ -1,0 +1,35 @@
+{
+  "name": "rootle",
+  "version": "0.6.0",
+  "description": "Structured logging and gRPC interception for TypeScript",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist/**",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "test": "tsc --project tsconfig.test.json && node --test .test-dist/test"
+  },
+  "keywords": [
+    "logging",
+    "typescript",
+    "grpc"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.14.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.14",
+    "typescript": "^5.8.2"
+  },
+  "packageManager": "pnpm@8.8.0+sha512.798e6b322669ce63c8da856bd62ad1f7b6f36f4dfaa0ac025af2bdd700d09dd5dca943e5cad3edac5d1b3baebc4b2c3fb80fbb8537f936733c32be2ec7805144"
+}

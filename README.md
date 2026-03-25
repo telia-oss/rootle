@@ -2,166 +2,94 @@
   <img src="https://github.com/telia-oss/rootle/blob/main/media/logo.png?raw=true" alt="Rootle"/>
 </p>
 
+Rootle is now a TypeScript-first structured logging library with an optional gRPC client interceptor exported from the same package.
 
-Cross language structured log APIs and, [error log gRPC client interceptor](./interceptor/README.md).
+## Install
 
-## Methods
-
-| Name          | Parameters |
-| ------------- | ------------- |
-| Info          |(message)  |
-| Warn          | (message)  |
-| Error         | (message, event, downstream, stacktrace, code)  |
-
-## Transports
-
-File transport, allows writting logs to file
-
-| Language          | status |
-| ------------- | ------------- |
-| [TypeScript](./typescript/README.md)          |:white_check_mark: |
-| Go          | Planned  |
-| Kotlin         | Planned |
-
-## Log structure
-
-| Field         | Type          | Required
-| ------------- | ------------- | ------------- |
-| id            | string        |Yes            |
-| application   | string        |Yes            |
-| time          | string        |Yes            |
-| message       | string        |Yes            |
-| level         | string        |Yes            |
-| event         | string        |No             |
-| downstream    | Downstream    |No             |
-| stacktrace    | string        |No             |
-| code "exit code"  | int       |No             |
-
-###  Downstream structure
-
-| Field         | Type          | Required
-| ------------- | ------------- | ------------- |
-| http          | Http          |No             |
-| grpc          | Grpc          |No             |
-
-####  Http structure
-
-| Field         | Type          | Required
-| ------------- | ------------- | ------------- |
-| method        | string        |No             |
-| statusCode    | HttpStatusCode(enum) |No      |
-| url           | string        |No             |
-| useragent     | string        |No             |
-| referer       | string        |No             |
-| payload       | string        |No             |
-
-####  Grpc structure
-
-| Field         | Type          | Required
-| ------------- | ------------- | ------------- |
-| procedure     | string        |No             |
-| code          | GrpcCodes(enum) |No           |
-| service       | string        |No             |
-| useragent     | string        |No             |
-| referer       | string        |No             |
-| payload       | string        |No             |
+```bash
+npm install rootle
+```
 
 ## Usage
 
-[Examples](https://github.com/telia-oss/rootle/tree/master/example)
+```ts
+import Rootle, {
+  FileTransport,
+  GetRootle,
+  GrpcCodes,
+  HttpStatusCode,
+  Interceptor,
+} from "rootle";
 
-- Go
-```
-
-import (
-	rootle "github.com/telia-oss/rootle"
-)
-
-	ctx := context.Background()
-
-logger := rootle.New(ctx, *rootle.NewConfig().WithID("ac12Cd-Aevd-12Grx-235f4").WithApplication("invoice-lambda"))
-
-logger.Info("Hello World")
-logger.Warn("Hello World")
-
-data := map[string]interface{}{
-  "foo": "bar",
-}
-
-json, _ := json.Marshal(data)
-
-logger.Error("Hello World", rootle.String(string(json)), &rootle.Downstream{
-  Http: &rootle.Http{
-    Method:     "GET",
-    StatusCode: rootle.INTERNAL_SERVER_ERROR,
-    Url:        "http://localhost:8080/invoice/123",
-    Useragent:  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
-    Referer:    "http://localhost:8080/",
-    Payload:    string(json),
+const logger = new Rootle(
+  "ac12Cd-Aevd-12Grx-235f4",
+  "billing-lambda",
+  {
+    referer: "client",
+    useragent: "agent",
   },
-  Grpc: &rootle.Grpc{
-    Procedure: "GetInvoice",
-    Code:      rootle.INTERNAL,
-    Service:   "invoice",
-    Useragent: "	/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
-    Referer: "http://localhost:8080/",
-    Payload: string(json),
+  new FileTransport({
+    enable: true,
+    filename: "logs",
+    path: process.cwd(),
+  }),
+);
+
+logger.info("Hello world");
+logger.warn("Warn, hello world!");
+logger.error("Error, hello world!", JSON.stringify({ foo: "bar" }), {
+  http: {
+    method: "GET",
+    statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+    url: "http://localhost:8080/invoice/123",
   },
-}, rootle.String("billing/user"), rootle.Int(0))
+  grpc: {
+    procedure: "GetInvoice",
+    code: GrpcCodes.INTERNAL,
+    service: "invoice",
+  },
+});
+
+const sameLogger = GetRootle();
+sameLogger.info("Using the shared logger instance");
+
+void Interceptor;
 ```
 
-- Kotlin
-```
-val logger = Rootle("ac12Cd-Aevd-12Grx-235f4", "Billing-lambda")
-logger.info("Hello world")
-logger.warn("Hello world")
+The valid single-module import form is:
 
-val jsonObject = JsonObject()
-jsonObject.addProperty("foo", "bar")
-
-
-logger.error("Error message", jsonObject.toString(), logger.Downstream(logger.Http("GET", StatusCode.InternalServerError.code, "http://localhost:8080/invoice/123",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
-    "http://localhost:8080/",  jsonObject.toString()),
-    logger.Grpc("GetInvoice", GrpcCodes.internalError.code, "invoice",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
-        "http://localhost:8080/", jsonObject.toString())), "billing/user", 0);
+```ts
+import Rootle, { Interceptor, GetRootle, FileTransport } from "rootle";
 ```
 
-- [TypeScript](./typescript/README.md)
-## Output example
-```
-- Info: {"id":"ac12Cd-Aevd-12Grx-235f4","application":"invoice-lambda","time":"2006-01-02T15:04:05.999999999Z","message":"Hello World","level":"INFO"}
+## API
 
-- Warn: {"id":"ac12Cd-Aevd-12Grx-235f4","application":"invoice-lambda","time":"2006-01-02T15:04:05.999999999Z","message":"Hello World","level":"WARN"}
+### Logger methods
 
-- Error: 
-{
-   "id":"ac12Cd-Aevd-12Grx-235f4",
-   "application":"invoice-lambda",
-   "time":"2006-01-02T15:04:05.999999999Z",
-   "message":"Hello World",
-   "level":"ERROR",
-   "event":"{\"foo\":\"bar\"}",
-   "downstream":{
-      "grpc":{
-         "procedure":"GetInvoice",
-         "code":13,
-         "service":"invoice",
-         "useragent":"\t/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
-         "referer":"http://localhost:8080/",
-         "payload":"{\"foo\":\"bar\"}"
-      },
-      "http":{
-         "method":"GET",
-         "status_code":500,
-         "url":"http://localhost:8080/invoice/123",
-         "useragent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
-         "referer":"http://localhost:8080/",
-         "payload":"{\"foo\":\"bar\"}"
-      }
-   },
-   "stackTrace":"billing/user",
-   "code":0
-}
-```
+| Name    | Parameters                                       |
+| ------- | ------------------------------------------------ |
+| `info`  | `(message)`                                      |
+| `warn`  | `(message)`                                      |
+| `error` | `(message, event, downstream, stackTrace, code)` |
+
+### Log shape
+
+| Field         | Type         | Required |
+| ------------- | ------------ | -------- |
+| `id`          | `string`     | Yes      |
+| `application` | `string`     | Yes      |
+| `time`        | `string`     | Yes      |
+| `message`     | `string`     | Yes      |
+| `level`       | `string`     | Yes      |
+| `event`       | `string`     | No       |
+| `downstream`  | `Downstream` | No       |
+| `stackTrace`  | `string`     | No       |
+| `code`        | `number`     | No       |
+
+## gRPC Interceptor
+
+`Interceptor` is exported from the main package. Configure `referer` and `useragent` field names through the `Rootle` constructor if you want the interceptor to map incoming request fields into the logged gRPC payload.
+
+## Examples
+
+TypeScript examples live in [example](./example).
