@@ -1,6 +1,6 @@
 {
   "name": "@telia/rootle",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "TS implementation of Rootle structured log",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
