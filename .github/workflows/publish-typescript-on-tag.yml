@@ -1,0 +1,82 @@
+name: Publish @telia/rootle on Tag
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish-typescript:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: typescript
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: typescript/package-lock.json
+
+      - name: Setup JFrog CLI (OIDC)
+        uses: jfrog/setup-jfrog-cli@v4
+        id: jfrog_oidc
+        env:
+          JF_URL: https://jfrog.teliacompany.io
+        with:
+          oidc-provider-name: github-cloud
+          oidc-audience: github-cloud
+
+      - name: Validate JFrog configuration
+        env:
+          JF_URL: https://jfrog.teliacompany.io
+          JFROG_NPM_REPO: ${{ vars.JFROG_NPM_REPO }}
+        run: |
+          if [ -z "$JF_URL" ] || [ -z "$JFROG_NPM_REPO" ]; then
+            echo "Missing required repository variables: JF_URL and/or JFROG_NPM_REPO"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+
+      - name: Ensure tag matches package version
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          PACKAGE_VERSION="$(node -p \"require('./package.json').version\")"
+          EXPECTED_TAG="v${PACKAGE_VERSION}"
+          if [ "$TAG_NAME" != "$EXPECTED_TAG" ]; then
+            echo "Tag '$TAG_NAME' does not match expected '$EXPECTED_TAG' from package.json"
+            exit 1
+          fi
+
+      - name: Configure npm via JFrog CLI
+        env:
+          JFROG_NPM_REPO: hid100008523-channel-api-local
+          JFROG_OIDC_USER: ${{ steps.jfrog_oidc.outputs.oidc-user }}
+          JFROG_OIDC_TOKEN: ${{ steps.jfrog_oidc.outputs.oidc-token }}
+        run: |
+          if [ -z "$JFROG_OIDC_USER" ] || [ -z "$JFROG_OIDC_TOKEN" ]; then
+            echo "Missing JFrog OIDC credentials from setup-jfrog-cli step"
+            exit 1
+          fi
+
+          jf npm-config \
+            --repo-resolve "$JFROG_NPM_REPO" \
+            --repo-deploy "$JFROG_NPM_REPO"
+
+      - name: Publish to JFrog
+        run: jf npm publish
