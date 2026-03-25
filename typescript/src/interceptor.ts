@@ -7,7 +7,7 @@ import {
   status as grpcStatus,
 } from "@grpc/grpc-js";
 
-import { GrpcCodes, GetRootle } from "@telia/rootle";
+import { GrpcCodes, GetRootle } from "./rootle";
 
 const Interceptor = function (options: any, nextCall: Function) {
   let savedReceiveMessage: any;
@@ -20,13 +20,12 @@ const Interceptor = function (options: any, nextCall: Function) {
   const requester: Requester = {
     start: function (metadata: Metadata, listener: Listener, next: Function) {
       const newListener = {
-        onReceiveMessage: function (message: any, next: Function) {
+        onReceiveMessage: function (message: any, nextMessage: Function) {
           savedReceiveMessage = message;
-          savedMessageNext = next;
+          savedMessageNext = nextMessage;
         },
-        onReceiveStatus: function (status: StatusObject, next: any) {
+        onReceiveStatus: function (status: StatusObject, nextStatus: Function) {
           if (status.code !== grpcStatus.OK) {
-            // Rootle log
             const logger = GetRootle();
             const interceptorRequestSources =
               logger.getInterceptorRequestSources();
@@ -53,17 +52,15 @@ const Interceptor = function (options: any, nextCall: Function) {
               status.details,
               1,
             );
-            savedMessageNext(savedReceiveMessage);
-            next(status);
-          } else {
-            savedMessageNext(savedReceiveMessage);
-            next(status);
           }
+
+          savedMessageNext(savedReceiveMessage);
+          nextStatus(status);
         },
       };
       next(metadata, newListener);
     },
-    sendMessage: function (message, next) {
+    sendMessage: function (message: any, next: Function) {
       savedSendMessage = message;
       next(message);
     },

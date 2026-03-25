@@ -1,0 +1,3 @@
+@telia:registry=https://<your-company>.jfrog.io/artifactory/api/npm/<npm-repo>/
+//<your-company>.jfrog.io/artifactory/api/npm/<npm-repo>/:_authToken=${JFROG_TOKEN}
+always-auth=true

@@ -1,19 +1,36 @@
 {
-  "name": "rootle",
-  "version": "0.6.0",
+  "name": "@telia/rootle",
+  "version": "0.8.0",
   "description": "TS implementation of Rootle structured log",
-  "main": "dist/rootle.js",
-  "types": "./dist/rootle.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
   "files": [
     "dist/**"
   ],
   "scripts": {
-    "build": "tsc --project tsconfig.json"
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc --project tsconfig.json",
+    "prepublishOnly": "npm run build",
+    "publish:jfrog": "npm publish --registry \"$NPM_REGISTRY_URL\""
+  },
+  "publishConfig": {
+    "access": "restricted"
   },
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.14.3"
+  },
   "devDependencies": {
-    "@types/node": "^18.7.2"
+    "@types/node": "^18.7.2",
+    "typescript": "^5.9.2"
   },
   "packageManager": "pnpm@8.8.0+sha512.798e6b322669ce63c8da856bd62ad1f7b6f36f4dfaa0ac025af2bdd700d09dd5dca943e5cad3edac5d1b3baebc4b2c3fb80fbb8537f936733c32be2ec7805144"
 }

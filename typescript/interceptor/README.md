@@ -1,10 +1,10 @@
-## Rootle gRPC client interceptor 
+## Rootle gRPC client interceptor
 
 Error log gRPC client uses [Rootle](https://github.com/telia-oss/rootle#grpc-structure) log API to log gRPC errors.
 
 ## Referer and User-Agent
 
-gRPC interceptors has the incoming request as an input to tell the Rootle interceptor which filed in the incoming request should be used as `referer` and, `useragent` an interface of type `InterceptorRequestSources` must be passed to the `Rootle` constructor. 
+gRPC interceptors has the incoming request as an input to tell the Rootle interceptor which filed in the incoming request should be used as `referer` and, `useragent` an interface of type `InterceptorRequestSources` must be passed to the `Rootle` constructor.
 
 ```
 const requestHeaders = {
@@ -18,8 +18,7 @@ The code above will tell the interceptor to look for field in the request named 
 ## Usage
 
 ```
-import Rootle from 'rootle';
-import Interceptor from 'rootle-grpc-interceptor';
+import Rootle, { Interceptor } from '@telia/rootle';
 
 const logger = new Rootle("ac12Cd-Aevd-12Grx-235f4", "billing-Lambda", {
 referer: "client",
