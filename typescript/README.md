@@ -137,6 +137,9 @@ The workflow validates that the git tag matches the package version in `typescri
 
 - package version `0.8.0` requires git tag `v0.8.0`
 
+You can also run the workflow manually from the GitHub web UI with `Run workflow`.
+When running it manually, provide the `tag` input and use the same version format, for example `v0.8.0`.
+
 Required GitHub repository variables:
 
 - `JF_URL` (example: `https://jfrog.teliacompany.io`)
