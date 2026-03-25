@@ -36,16 +36,6 @@ jobs:
           oidc-provider-name: github-cloud
           oidc-audience: github-cloud
 
-      - name: Validate JFrog configuration
-        env:
-          JF_URL: https://jfrog.teliacompany.io
-          JFROG_NPM_REPO: ${{ vars.JFROG_NPM_REPO }}
-        run: |
-          if [ -z "$JF_URL" ] || [ -z "$JFROG_NPM_REPO" ]; then
-            echo "Missing required repository variables: JF_URL and/or JFROG_NPM_REPO"
-            exit 1
-          fi
-
       - name: Install dependencies
         run: npm ci
 
